@@ -2,16 +2,17 @@
 
 import os
 import sys
-from Crypto.Cipher import AES
+import pyaes
 
 def encrypt_file(fname, aes):
 	contents = None
 	with open(fname, "r") as f:
 		contents = f.read()
 		contents += (16 - (len(contents) % 16)) * '\n'
+		contents = contents.encode("utf-8")
 
 	with open(fname, "wb") as f:
-		encrypted = aes.encrypt(contents.encode("ISO-8859-1"))
+		encrypted = aes.encrypt(contents)
 		f.write(encrypted)
 
 def decrypt_file(fname, aes):
@@ -20,29 +21,43 @@ def decrypt_file(fname, aes):
 		contents = f.read()
 
 	with open(fname, "w") as f:
-		decrypted = aes.decrypt(contents).decode("ISO-8859-1")
+		decrypted = aes.decrypt(contents)
+		decrypted = remove_trailing_nl(decrypted.decode("utf-8"))
 		f.write(decrypted)
 
 def recursive_encrypt(key, path):
-	aes = AES.new(key.encode("utf8"), AES.MODE_CBC)
+	key = key.encode("utf-8")
+	aes = pyaes.AESModeOfOperationCTR(key)
 	for root, dirs, files in os.walk('.'):
 		if '.git' in root or '.idea' in root:
 			continue
 
 		for f in files:
-			if f != "clavis.py":
+			if f != "clavis.py" and f != "README.md":
 				encrypt_file(f, aes)
 
 def recursive_decrypt(key, path):
-	aes = AES.new(key.encode("utf8"), AES.MODE_CBC)
+	key = key.encode("utf-8")
+	aes = pyaes.AESModeOfOperationCTR(key)
 
 	for root, dirs, files in os.walk('.'):
-		if '.git' in root:
+		if '.git' in root or '.idea' in root:
 			continue
 
 		for f in files:
-			if f != "clavis.py":
+			if f != "clavis.py" and f != "README.md":
 				decrypt_file(f, aes)
+
+def remove_trailing_nl(string):
+	while len(string) > 1:
+		hit = False
+		if string[-2] == '\n':
+			string = string[:len(string)-1]
+			hit = True
+		if not hit:
+			break
+
+	return string
 
 
 def main():
@@ -62,9 +77,9 @@ def main():
 
 
 	if sys.argv[1] == '-e':
-		recursive_encrypt(key, '.')
+		return recursive_encrypt(key, '.')
 	elif sys.argv[1] == '-d':
-		recursive_decrypt(key, '.')
+		return recursive_decrypt(key, '.')
 	else:
 		return 1
 
