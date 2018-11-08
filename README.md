@@ -17,7 +17,7 @@ $ python clavis.py -e PASSWORD
 
 ### Decryption
 ```
-$ python clavis.pt -d PASSWORD
+$ python clavis.py -d PASSWORD
 ```
 
 ## Notes:
