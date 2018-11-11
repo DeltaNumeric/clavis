@@ -9,23 +9,24 @@ Clavis will use the provided password to encrypt your data, which will then only
 4. push your changes
 
 ## Installation
-Coming soon to Python Package Index!
-For now, clone the repo and copy clavis.py to your the **root** of your repository.
+```
+pip install clavis
+```
 
 ## Usage
 After running, you will prompted for your password to encrypt the data with
 ### Encryption
 ```
-$ python clavis.py -e
+$ clavis.py -e
 ```
 
 ### Decryption
 ```
-$ python clavis.py -d
+$ clavis.py -d
 ```
 
 ## .clavrc
-Clavis will look for ```.clavrc``` in the root of your repo.
+Clavis will look for ```.clavrc``` in your current working directory.
 
 Two options are supported:
 ```
