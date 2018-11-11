@@ -8,18 +8,34 @@ Clavis will use the provided password to encrypt your data, which will then only
 3. encrypt your repo using the same secret key for decryption
 4. push your changes
 
-## Usage
+## Installation
+Coming soon to Python Package Index!
+For now, clone the repo and copy clavis.py to your the **root** of your repository.
 
+## Usage
+After running, you will prompted for your password to encrypt the data with
 ### Encryption
 ```
-$ python clavis.py -e PASSWORD
+$ python clavis.py -e
 ```
 
 ### Decryption
 ```
-$ python clavis.py -d PASSWORD
+$ python clavis.py -d
+```
+
+## .clavrc
+Clavis will look for ```.clavrc``` in the root of your repo.
+
+Two options are supported:
+```
+ignore_files = myscript.py, words.txt
+ignore_dirs = public
 ```
 
 ## Notes:
-* The password field must be of length 16, 24, or 32.
+* The password field must be of length 16.
+  * If it is longer, it will be truncated
+  * If it shorter, it will be right-padded by '*'
 * Clavis must be run from the **root** of your repo.
+* Currently only supported by Python 3
