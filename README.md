@@ -36,7 +36,5 @@ ignore_dirs = public
 
 ## Notes:
 * The password field must be of length 16.
-  * If it is longer, it will be truncated
-  * If it shorter, it will be right-padded by 'x'
 * Clavis must be run from the **root** of your repo.
 * Currently only supported by Python 3
