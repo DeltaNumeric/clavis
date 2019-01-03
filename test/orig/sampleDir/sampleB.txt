@@ -2,5 +2,3 @@ Sample
 text
 file
 B.
-
-

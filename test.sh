@@ -1,11 +1,28 @@
+#!/usr/bin/env bash
+
 # make copy of original directory
-cd ./test && cp -R orig copy
+cd ./test
+cp -R orig/ copy/
 
 # encrypt dir
-cd ./test/orig && python ../../clavis.py -e
+cd ./orig
+echo -e "Running clavis (encryption)."
+python3 ../../clavis.py -e
 
 # unencrypt dir
-cd ./test/orig && python ../../clavis.py -d
+echo -e "\nRunning clavis (decryption)."
+python3 ../../clavis.py -d
+cd ..
 
 # should be no differences
-cd ./test && diff orig copy
+echo -e "\nFile structure"
+diff -r orig copy
+
+echo -e "\n"
+
+# remove possibly clobbered dir unless leave flag specified
+rm -r orig
+
+# rename to restore
+mv copy orig
+

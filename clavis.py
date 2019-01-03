@@ -5,10 +5,7 @@ import sys
 import re
 import getpass
 
-try:
-    import pyaes
-except:
-    raise ImportError("Please install \'pyaes\' to use Clavis. \n(pip install pyaes)")
+import pyaes
 
 class clavis:
     def __init__(self):
@@ -166,8 +163,6 @@ class clavis:
             self.__recursive_encrypt()
         elif sys.argv[1] == '-d':
             self.__recursive_decrypt()
-        else:
-            raise ValueError("Mode of operation must be \"-e\" or \"-d\".")
 
         return 0
 
