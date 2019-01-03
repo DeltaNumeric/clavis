@@ -13,7 +13,7 @@ except:
 class clavis:
     def __init__(self):
         if len(sys.argv) != 2:
-            print("Usage: clavis (-e|-d)")
+            print("Usage: clavis.py (-e|-d)")
             exit(1)
 
         if sys.argv[1] != '-e' and sys.argv[1] != '-d':
@@ -22,24 +22,25 @@ class clavis:
 
         key = str(getpass.getpass())
 
-        if len(key) > 16:
-            key = key[:15]
-        elif len(key) < 16:
-            key += (16 - len(key)) * "x"
+        if len(key) != 16:
+            raise ValueError("Password must be 16 characters.")
 
         self.key = key
         self.aes = pyaes.AESModeOfOperationCTR(bytes(self.key.encode("utf-8")))
         self.opts = {
-            "ignore_files": ["clavis", ".clavrc"],  # files to ignore
+            "ignore_files": ["clavis.py", ".clavis"],  # files to ignore
             "ignore_dirs": [".git"],  # directories to ignore
             "mode": None  # mode of operation
         }
 
+        self.build_file_ignore_list()
+        self.build_dir_ignore_list()
+
     def build_file_ignore_list(self):
         expr = re.compile('(ignore_files)\s*=\s*(.?\w+\.?\w*)(\s*,\s*(.?\w+\.?\w*))*')
         lines = None
-        if os.path.exists("./.clavrc"):  # resource file
-            with open("./.clavrc") as f:
+        if os.path.exists(".clavis"):  # resource file
+            with open(".clavis") as f:
                 lines = f.readlines()
 
         if lines is None:
@@ -67,8 +68,8 @@ class clavis:
     def build_dir_ignore_list(self):
         expr = re.compile('(ignore_dirs)\s*=\s*(.?\w+\.?\w*)(\s*,\s*(.?\w+\.?\w*))*')
         lines = None
-        if os.path.exists("./.clavrc"):  # resource file
-            with open("./.clavrc") as f:
+        if os.path.exists(".clavis"):  # resource file
+            with open(".clavis") as f:
                 lines = f.readlines()
 
         if lines is None:
@@ -145,6 +146,9 @@ class clavis:
 
     @staticmethod
     def __remove_trailing_nl(string):
+        """
+        remove all but one occurrences of newline characters at the end of a file.
+        """
         while len(string) > 1:
             hit = False
             if string[-2] == '\n':
@@ -157,13 +161,13 @@ class clavis:
 
     def run(self):
         self.opts["mode"] = sys.argv[1]
-        self.build_file_ignore_list()
-        self.build_dir_ignore_list()
 
         if sys.argv[1] == '-e':
             self.__recursive_encrypt()
         elif sys.argv[1] == '-d':
             self.__recursive_decrypt()
+        else:
+            raise ValueError("Mode of operation must be \"-e\" or \"-d\".")
 
         return 0
 

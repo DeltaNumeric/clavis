@@ -1,7 +1,0 @@
-README.md
-clavis
-setup.py
-clavis.egg-info/PKG-INFO
-clavis.egg-info/SOURCES.txt
-clavis.egg-info/dependency_links.txt
-clavis.egg-info/top_level.txt
